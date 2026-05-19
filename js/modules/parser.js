@@ -8,13 +8,16 @@ export function parseSpreadsheet(file) {
 
             try {
 
-                const data = new Uint8Array(event.target.result);
+                const data =
+                    new Uint8Array(event.target.result);
 
-                const workbook = XLSX.read(data, {
-                    type: "array"
-                });
+                const workbook =
+                    XLSX.read(data, {
+                        type: "array"
+                    });
 
-                const sheetName = workbook.SheetNames[0];
+                const sheetName =
+                    workbook.SheetNames[0];
 
                 const worksheet =
                     workbook.Sheets[sheetName];
@@ -22,22 +25,24 @@ export function parseSpreadsheet(file) {
                 const jsonData =
                     XLSX.utils.sheet_to_json(worksheet);
 
-                const normalizedData = jsonData.map((row) => {
+                const normalizedData =
+                    jsonData.map((row) => {
 
-                    const normalizedRow = {};
+                        const normalizedRow = {};
 
-                    Object.keys(row).forEach((key) => {
+                        Object.keys(row).forEach((key) => {
 
-                        const cleanKey =
-                            key
-                                .trim()
-                                .toLowerCase();
+                            const cleanKey =
+                                key
+                                    .trim()
+                                    .toLowerCase();
 
-                        normalizedRow[cleanKey] = row[key];
+                            normalizedRow[cleanKey] =
+                                row[key];
+                        });
+
+                        return normalizedRow;
                     });
-
-                    return normalizedRow;
-                });
 
                 resolve(normalizedData);
 

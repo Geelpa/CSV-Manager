@@ -1,30 +1,39 @@
 export function renderContacts(contacts) {
+
     const container =
         document.getElementById("contactsContainer");
 
     container.innerHTML = "";
-    console.log(container);
 
     contacts.forEach((contact) => {
 
-        const id =
-            contact.id || "-";
+        const values =
+            Object.values(contact);
 
-        const name =
-            contact.nome;
+        let id = "-";
+        let name = "";
+        let phone = "";
 
-        const phone =
-            contact.contato;
+        if (values.length === 2) {
 
-        // validação obrigatória
-        // if (!name || !phone) return;
+            name = values[0];
+            phone = values[1];
 
-        const card = document.createElement("div");
+        } else {
+
+            id = values[0];
+            name = values[1];
+            phone = values[2];
+        }
+
+        const card =
+            document.createElement("div");
 
         card.className =
             "bg-white p-4 rounded-xl shadow flex items-center justify-between";
 
         card.innerHTML = `
+        
             <div>
                 <p class="text-sm text-gray-400">
                     ID: ${id}
@@ -47,15 +56,19 @@ export function renderContacts(contacts) {
                 >
                     Copiar
                 </button>
+
             </div>
         `;
+
         container.appendChild(card);
-        setupButtons();
     });
+
+    setupButtons();
 }
 
+
 function setupButtons() {
-    // BOTÕES COPIAR
+
     const copyButtons =
         document.querySelectorAll(".copyBtn");
 
@@ -71,12 +84,10 @@ function setupButtons() {
             button.innerText = "Copiado!";
 
             setTimeout(() => {
+
                 button.innerText = "Copiar";
+
             }, 1500);
         });
     });
-
-
 }
-
-setupButtons();

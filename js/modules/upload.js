@@ -4,6 +4,13 @@ import { parseSpreadsheet }
 import { renderContacts }
     from "./contacts.js";
 
+import {
+    createSheet,
+    saveContacts
+}
+    from "./firestore.js";
+
+
 export function initializeUpload() {
 
     const uploadBtn =
@@ -26,18 +33,31 @@ export function initializeUpload() {
 
         try {
 
+            // LER PLANILHA
             const data =
                 await parseSpreadsheet(file);
 
             console.log(data);
 
+            // CRIAR PLANILHA
+            const sheetId =
+                await createSheet(file.name);
+
+            console.log("Sheet criada:", sheetId);
+
+            // SALVAR CONTATOS
+            await saveContacts(sheetId, data);
+
+            console.log("Contatos salvos!");
+
+            // RENDER LOCAL
             renderContacts(data);
 
         } catch (error) {
 
             console.error(error);
 
-            alert("Erro ao ler planilha");
+            alert("Erro ao importar planilha");
         }
     });
 }
