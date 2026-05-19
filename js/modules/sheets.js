@@ -78,10 +78,30 @@ export async function loadSheets() {
                 document.getElementById(
                     "contactsContainer"
                 ).innerHTML = "";
+
+                document
+                    .getElementById("activeSheet")
+                    .classList.add("hidden");
+
+                document
+                    .getElementById("emptyState")
+                    .classList.remove("hidden");
             });
             setCurrentSheetId(
                 sheet.firestoreId
             );
+
+            document
+                .getElementById("emptyState")
+                .classList.add("hidden");
+
+            document
+                .getElementById("activeSheet")
+                .classList.remove("hidden");
+
+            document
+                .getElementById("activeSheetName")
+                .innerText = sheet.name;
 
             await renderContacts(
                 sheet.firestoreId,

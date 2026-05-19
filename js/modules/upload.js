@@ -48,19 +48,13 @@ export function initializeUpload() {
             const data =
                 await parseSpreadsheet(file);
 
-            console.log(data);
-
             // CRIAR PLANILHA
             const sheetId =
                 await createSheet(file.name);
             setCurrentSheetId(sheetId);
 
-            console.log("Sheet criada:", sheetId);
-
             // SALVAR CONTATOS
             await saveContacts(sheetId, data);
-
-            console.log("Contatos salvos!");
 
             // RENDER LOCAL
             const contacts =

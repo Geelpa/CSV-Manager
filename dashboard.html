@@ -8,6 +8,7 @@
     <title>Dashboard</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <style src="./css/style.css"></style>
 
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -61,20 +62,60 @@
             <div id="sheetsContainer" class="space-y-2"></div>
 
         </div>
+        <div id="sheetInfo" class="mt-6 mb-4">
+
+            <div id="emptyState"
+                class="bg-gray-100 border border-dashed border-gray-300 rounded-2xl p-8 text-center text-gray-500">
+                Nenhuma planilha selecionada.
+            </div>
+
+            <div id="activeSheet" class="hidden bg-white shadow rounded-2xl p-4">
+
+                <span class="text-sm text-gray-400">
+                    Planilha atual
+                </span>
+
+                <h2 id="activeSheetName" class="text-2xl font-bold">
+                    -
+                </h2>
+
+            </div>
+
+        </div>
 
         <!-- ABAS -->
-        <div class="flex gap-2 mt-6">
+        <div class="grid grid-cols-3 gap-3 mt-6">
 
-            <button id="pendingTab" class="bg-blue-500 text-white px-4 py-2 rounded-lg">
-                Pendentes
+            <button id="pendingTab" class="tabBtn activeTab">
+                <span class="text-sm opacity-70">
+                    Pendentes
+                </span>
+
+                <strong id="pendingCount" class="text-2xl">
+                    0
+                </strong>
             </button>
 
-            <button id="calledTab" class="bg-green-500 text-white px-4 py-2 rounded-lg">
-                Chamados
+
+            <button id="calledTab" class="tabBtn">
+                <span class="text-sm opacity-70">
+                    Chamados
+                </span>
+
+                <strong id="calledCount" class="text-2xl">
+                    0
+                </strong>
             </button>
 
-            <button id="deletedTab" class="bg-red-500 text-white px-4 py-2 rounded-lg">
-                Excluídos
+
+            <button id="deletedTab" class="tabBtn">
+                <span class="text-sm opacity-70">
+                    Excluídos
+                </span>
+
+                <strong id="deletedCount" class="text-2xl">
+                    0
+                </strong>
             </button>
 
         </div>

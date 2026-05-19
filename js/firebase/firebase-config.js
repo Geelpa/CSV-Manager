@@ -8,6 +8,7 @@ import {
     getFirestore
 } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
 
+
 const firebaseConfig = {
     apiKey: "AIzaSyDdx2jqpo8lS0HF-ME5XrnBTRlYsU9po7M",
     authDomain: "csv-manager-7a5a4.firebaseapp.com",

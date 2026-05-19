@@ -181,3 +181,24 @@ export async function deleteSheet(sheetId) {
 
     await batch.commit();
 }
+
+export async function getAllContacts(sheetId) {
+
+    const user = auth.currentUser;
+
+    const q = query(
+        collection(db, "contacts"),
+
+        where("userId", "==", user.uid),
+
+        where("sheetId", "==", sheetId)
+    );
+
+    const snapshot =
+        await getDocs(q);
+
+    return snapshot.docs.map((doc) => ({
+        firestoreId: doc.id,
+        ...doc.data()
+    }));
+}

@@ -1,0 +1,14 @@
+.tabBtn {
+
+    @apply bg-white rounded-2xl shadow p-4 flex flex-col items-start transition-all duration-200 border border-transparent;
+}
+
+.tabBtn:hover {
+
+    @apply shadow-lg -translate-y-1;
+}
+
+.activeTab {
+
+    @apply border-blue-500 bg-blue-50;
+}

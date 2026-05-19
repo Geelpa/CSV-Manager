@@ -1,19 +1,28 @@
 import {
     updateContactStatus,
-    getContacts
+    getAllContacts
 }
     from "./firestore.js";
 let currentContacts = [];
+
+
+let allContacts = [];
 
 export async function renderContacts(
     sheetId,
     status = "pending"
 ) {
 
+    if (!allContacts.length) {
+
+        allContacts =
+            await getAllContacts(sheetId);
+    }
+
     const contacts =
-        await getContacts(
-            sheetId,
-            status
+        allContacts.filter(
+            (contact) =>
+                contact.status === status
         );
 
     const container =
@@ -22,6 +31,7 @@ export async function renderContacts(
         );
 
     container.innerHTML = "";
+    updateCounters();
 
     contacts.forEach((contact) => {
 
@@ -114,14 +124,28 @@ function setupButtons(
 
             button.addEventListener("click", async () => {
 
-                await updateContactStatus(
-                    button.dataset.id,
-                    "called"
-                );
+                const contact =
+                    allContacts.find(
+                        (item) =>
+                            item.firestoreId ===
+                            button.dataset.id
+                    );
+
+                if (contact) {
+
+                    contact.status = "called";
+                }
+
+                updateCounters();
 
                 await renderContacts(
                     sheetId,
                     currentStatus
+                );
+
+                updateContactStatus(
+                    button.dataset.id,
+                    "called"
                 );
             });
         });
@@ -133,15 +157,63 @@ function setupButtons(
 
             button.addEventListener("click", async () => {
 
-                await updateContactStatus(
-                    button.dataset.id,
-                    "deleted"
-                );
+                const contact =
+                    allContacts.find(
+                        (item) =>
+                            item.firestoreId ===
+                            button.dataset.id
+                    );
+
+                if (contact) {
+
+                    contact.status = "deleted";
+                }
+
+                updateCounters();
 
                 await renderContacts(
                     sheetId,
                     currentStatus
                 );
+
+                updateContactStatus(
+                    button.dataset.id,
+                    "deleted"
+                );
             });
         });
+}
+
+export function updateCounters() {
+
+    const pending =
+        allContacts.filter(
+            (contact) =>
+                contact.status === "pending"
+        ).length;
+
+    const called =
+        allContacts.filter(
+            (contact) =>
+                contact.status === "called"
+        ).length;
+
+    const deleted =
+        allContacts.filter(
+            (contact) =>
+                contact.status === "deleted"
+        ).length;
+
+
+    document.getElementById(
+        "pendingCount"
+    ).innerText = pending;
+
+    document.getElementById(
+        "calledCount"
+    ).innerText = called;
+
+    document.getElementById(
+        "deletedCount"
+    ).innerText = deleted;
 }
