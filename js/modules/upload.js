@@ -1,14 +1,25 @@
+import {
+    createSheet,
+    saveContacts,
+    getContacts
+}
+    from "./firestore.js";
+
 import { parseSpreadsheet }
     from "./parser.js";
+
+import {
+    loadSheets
+}
+    from "./sheets.js";
 
 import { renderContacts }
     from "./contacts.js";
 
 import {
-    createSheet,
-    saveContacts
+    setCurrentSheetId
 }
-    from "./firestore.js";
+    from "../dashboard.js";
 
 
 export function initializeUpload() {
@@ -42,6 +53,7 @@ export function initializeUpload() {
             // CRIAR PLANILHA
             const sheetId =
                 await createSheet(file.name);
+            setCurrentSheetId(sheetId);
 
             console.log("Sheet criada:", sheetId);
 
@@ -51,7 +63,16 @@ export function initializeUpload() {
             console.log("Contatos salvos!");
 
             // RENDER LOCAL
-            renderContacts(data);
+            const contacts =
+                await getContacts(sheetId);
+
+            await renderContacts(
+
+                sheetId,
+                "pending"
+            );
+
+            await loadSheets();
 
         } catch (error) {
 
@@ -59,5 +80,7 @@ export function initializeUpload() {
 
             alert("Erro ao importar planilha");
         }
+
+
     });
 }

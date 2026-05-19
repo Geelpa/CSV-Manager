@@ -83,12 +83,20 @@ export async function saveContacts(sheetId, contacts) {
 }
 
 
-// BUSCAR CONTATOS
-export async function getContacts(sheetId, status = "pending") {
+export async function getContacts(
+    sheetId,
+    status = "pending"
+) {
+
+    const user = auth.currentUser;
 
     const q = query(
         collection(db, "contacts"),
+
+        where("userId", "==", user.uid),
+
         where("sheetId", "==", sheetId),
+
         where("status", "==", status)
     );
 
@@ -111,4 +119,30 @@ export async function updateContactStatus(contactId, status) {
     await updateDoc(ref, {
         status
     });
+}
+
+import {
+    orderBy
+}
+    from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
+
+
+// BUSCAR PLANILHAS
+export async function getSheets() {
+
+    const user = auth.currentUser;
+
+    const q = query(
+        collection(db, "sheets"),
+        where("userId", "==", user.uid),
+        orderBy("createdAt", "desc")
+    );
+
+    const snapshot =
+        await getDocs(q);
+
+    return snapshot.docs.map((doc) => ({
+        firestoreId: doc.id,
+        ...doc.data()
+    }));
 }

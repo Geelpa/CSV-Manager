@@ -1,30 +1,29 @@
-export function renderContacts(contacts) {
+import {
+    updateContactStatus,
+    getContacts
+}
+    from "./firestore.js";
+let currentContacts = [];
+
+export async function renderContacts(
+    sheetId,
+    status = "pending"
+) {
+
+    const contacts =
+        await getContacts(
+            sheetId,
+            status
+        );
 
     const container =
-        document.getElementById("contactsContainer");
+        document.getElementById(
+            "contactsContainer"
+        );
 
     container.innerHTML = "";
 
     contacts.forEach((contact) => {
-
-        const values =
-            Object.values(contact);
-
-        let id = "-";
-        let name = "";
-        let phone = "";
-
-        if (values.length === 2) {
-
-            name = values[0];
-            phone = values[1];
-
-        } else {
-
-            id = values[0];
-            name = values[1];
-            phone = values[2];
-        }
 
         const card =
             document.createElement("div");
@@ -36,15 +35,15 @@ export function renderContacts(contacts) {
         
             <div>
                 <p class="text-sm text-gray-400">
-                    ID: ${id}
+                    ID: ${contact.externalId || "-"}
                 </p>
 
                 <h2 class="font-bold text-lg">
-                    ${name}
+                    ${contact.name}
                 </h2>
 
                 <p class="text-gray-600">
-                    ${phone}
+                    ${contact.phone}
                 </p>
             </div>
 
@@ -52,9 +51,23 @@ export function renderContacts(contacts) {
 
                 <button
                     class="copyBtn bg-gray-200 px-4 py-2 rounded-lg"
-                    data-phone="${phone}"
+                    data-phone="${contact.phone}"
                 >
                     Copiar
+                </button>
+
+                <button
+                    class="calledBtn bg-green-500 text-white px-4 py-2 rounded-lg"
+                    data-id="${contact.firestoreId}"
+                >
+                    ✓
+                </button>
+
+                <button
+                    class="deleteBtn bg-red-500 text-white px-4 py-2 rounded-lg"
+                    data-id="${contact.firestoreId}"
+                >
+                    ✕
                 </button>
 
             </div>
@@ -63,31 +76,72 @@ export function renderContacts(contacts) {
         container.appendChild(card);
     });
 
-    setupButtons();
+    setupButtons(sheetId, status);
 }
 
 
-function setupButtons() {
+function setupButtons(
+    sheetId,
+    currentStatus
+) {
 
-    const copyButtons =
-        document.querySelectorAll(".copyBtn");
+    // COPIAR
+    document.querySelectorAll(".copyBtn")
+        .forEach((button) => {
 
-    copyButtons.forEach((button) => {
+            button.addEventListener("click", () => {
 
-        button.addEventListener("click", () => {
+                navigator.clipboard.writeText(
+                    button.dataset.phone
+                );
 
-            const phone =
-                button.dataset.phone;
+                button.innerText =
+                    "Copiado!";
 
-            navigator.clipboard.writeText(phone);
+                setTimeout(() => {
 
-            button.innerText = "Copiado!";
+                    button.innerText =
+                        "Copiar";
 
-            setTimeout(() => {
-
-                button.innerText = "Copiar";
-
-            }, 1500);
+                }, 1500);
+            });
         });
-    });
+
+
+    // CHAMADO
+    document.querySelectorAll(".calledBtn")
+        .forEach((button) => {
+
+            button.addEventListener("click", async () => {
+
+                await updateContactStatus(
+                    button.dataset.id,
+                    "called"
+                );
+
+                await renderContacts(
+                    sheetId,
+                    currentStatus
+                );
+            });
+        });
+
+
+    // EXCLUIR
+    document.querySelectorAll(".deleteBtn")
+        .forEach((button) => {
+
+            button.addEventListener("click", async () => {
+
+                await updateContactStatus(
+                    button.dataset.id,
+                    "deleted"
+                );
+
+                await renderContacts(
+                    sheetId,
+                    currentStatus
+                );
+            });
+        });
 }

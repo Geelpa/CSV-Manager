@@ -2,6 +2,11 @@ import { auth, db }
     from "./firebase/firebase-config.js";
 
 import {
+    loadSheets
+}
+    from "./modules/sheets.js";
+
+import {
     onAuthStateChanged,
     signOut
 }
@@ -51,6 +56,7 @@ onAuthStateChanged(auth, async (user) => {
 
             welcomeText.innerText =
                 `Olá, ${userData.name} 👋`;
+            await loadSheets();
         }
 
     } catch (error) {
@@ -74,3 +80,63 @@ logoutBtn.addEventListener("click", async () => {
 
 // INICIALIZA UPLOAD
 initializeUpload();
+
+import {
+    renderContacts
+}
+    from "./modules/contacts.js";
+
+import {
+    getContacts
+}
+    from "./modules/firestore.js";
+
+
+let activeContacts = [];
+export let currentSheetId = null;
+
+export function setCurrentSheetId(sheetId) {
+
+    currentSheetId = sheetId;
+}
+
+
+// ABAS
+document
+    .getElementById("pendingTab")
+    .addEventListener("click", async () => {
+
+        if (!currentSheetId) return;
+
+        await renderContacts(
+            currentSheetId,
+            "pending"
+        );
+    });
+
+
+document
+    .getElementById("calledTab")
+    .addEventListener("click", async () => {
+
+        if (!currentSheetId) return;
+
+        await renderContacts(
+            currentSheetId,
+            "called"
+        );
+    });
+
+
+document
+    .getElementById("deletedTab")
+    .addEventListener("click", async () => {
+
+        if (!currentSheetId) return;
+
+        await renderContacts(
+            currentSheetId,
+            "deleted"
+        );
+    });
+
