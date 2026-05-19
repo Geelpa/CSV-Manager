@@ -10,6 +10,10 @@ import {
     getDoc
 } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
 
+
+import { initializeUpload }
+    from "./modules/upload.js";
+
 const welcomeText = document.getElementById("welcomeText");
 const logoutBtn = document.getElementById("logoutBtn");
 
@@ -50,3 +54,5 @@ logoutBtn.addEventListener("click", async () => {
 
     window.location.href = "index.html";
 });
+
+initializeUpload();

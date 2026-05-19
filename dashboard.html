@@ -8,19 +8,22 @@
     <title>Dashboard</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100 min-h-screen">
 
-    <header class="bg-white shadow p-4 flex justify-between">
+    <!-- HEADER -->
+    <header class="bg-white shadow p-4 flex justify-between items-center">
 
         <h1 class="text-2xl font-bold">
-            CSV Manager
+            Csv Manager
         </h1>
 
         <div class="flex items-center gap-4">
 
-            <span id="welcomeText" class="font-semibold">
+            <span id="welcomeText">
                 Carregando...
             </span>
 
@@ -31,6 +34,29 @@
         </div>
 
     </header>
+
+    <!-- MAIN -->
+    <main class="p-6">
+
+        <!-- UPLOAD -->
+        <div class="bg-white p-6 rounded-2xl shadow">
+
+            <div class="flex gap-4">
+
+                <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" class="border p-3 rounded-lg w-full">
+
+                <button id="uploadBtn" class="bg-blue-500 text-white px-6 py-3 rounded-lg">
+                    Importar
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- CONTATOS -->
+        <div id="contactsContainer" class="mt-6 space-y-3"></div>
+
+    </main>
 
     <script type="module" src="./js/dashboard.js"></script>
 
