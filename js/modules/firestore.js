@@ -146,3 +146,38 @@ export async function getSheets() {
         ...doc.data()
     }));
 }
+
+import {
+    deleteDoc
+}
+    from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
+
+
+// EXCLUIR PLANILHA
+export async function deleteSheet(sheetId) {
+
+    // BUSCA CONTATOS
+    const q = query(
+        collection(db, "contacts"),
+        where("sheetId", "==", sheetId)
+    );
+
+    const snapshot =
+        await getDocs(q);
+
+    // BATCH DELETE
+    const batch =
+        writeBatch(db);
+
+    snapshot.docs.forEach((document) => {
+
+        batch.delete(document.ref);
+    });
+
+    // REMOVE SHEET
+    batch.delete(
+        doc(db, "sheets", sheetId)
+    );
+
+    await batch.commit();
+}

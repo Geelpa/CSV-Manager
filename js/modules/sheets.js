@@ -2,7 +2,10 @@ import {
     getSheets
 }
     from "./firestore.js";
-
+import {
+    deleteSheet
+}
+    from "./firestore.js";
 import {
     renderContacts
 }
@@ -36,13 +39,46 @@ export async function loadSheets() {
 
         card.innerHTML = `
         
-            <h3 class="font-bold">
-                📁 ${sheet.name}
-            </h3>
-        `;
+    <div class="flex items-center justify-between">
+
+        <h3 class="font-bold">
+            📁 ${sheet.name}
+        </h3>
+
+        <button
+            class="deleteSheetBtn bg-red-500 text-white px-3 py-1 rounded-lg"
+        >
+            🗑
+        </button>
+
+    </div>
+`;
 
         card.addEventListener("click", async () => {
+            const deleteBtn =
+                card.querySelector(".deleteSheetBtn");
 
+            deleteBtn.addEventListener("click", async (e) => {
+
+                e.stopPropagation();
+
+                const confirmDelete =
+                    confirm(
+                        `Excluir ${sheet.name}?`
+                    );
+
+                if (!confirmDelete) return;
+
+                await deleteSheet(
+                    sheet.firestoreId
+                );
+
+                await loadSheets();
+
+                document.getElementById(
+                    "contactsContainer"
+                ).innerHTML = "";
+            });
             setCurrentSheetId(
                 sheet.firestoreId
             );
